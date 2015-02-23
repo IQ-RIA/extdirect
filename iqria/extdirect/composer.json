@@ -1,0 +1,30 @@
+{
+    "name": "iqria/yii2-ext-direct",
+    "description": "Yii2 Ext.Direct implementation.",
+    "keywords": ["ext-direct", "yii2", "yii2-extjs", "extjs"],
+    "homepage": "http://iqria.com",
+    "type": "yii2-extension",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Stanislav Hudkov",
+            "email": "stanislav.hudkov@iqria.com",
+            "role": "Creator"
+        }
+    ],
+    "minimum-stablity" : "dev",
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "iqria\\extdirect\\": ""
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/IQ-RIA/extdirect"
+        }
+    ]
+}
