@@ -297,8 +297,9 @@ JAVASCRIPT;
         ];
 
         try {
+            $params = is_null($params['data']) ? [] : $params['data'][0];
             $routeInfo = Yii::$app->createController($route);
-            $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params['data']);
+            $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params);
         } catch (\Exception $e) {
             $response['result'] = 'exception';
             if ($this->debug) {
