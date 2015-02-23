@@ -2,7 +2,7 @@
     "name": "iqria/extdirect",
     "description": "Yii2 Ext.Direct implementation.",
     "keywords": ["ext-direct", "yii2", "yii2-extjs", "extjs"],
-    "homepage": "http://iqria.com",
+    "homepage": "http://iqria.com/",
     "type": "yii2-extension",
     "license": "BSD",
     "authors": [
