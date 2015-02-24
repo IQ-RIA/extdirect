@@ -222,6 +222,7 @@ $this->descriptor = $apiJson;
 
 JAVASCRIPT;
 
+        Yii::$app->response->headers->add('Content-Type', 'application/javascript');
         return $jsTemplate;
     }
 
@@ -231,6 +232,7 @@ JAVASCRIPT;
      */
     public function getApiJson()
     {
+        Yii::$app->response->headers->add('Content-Type', 'application/json');
         return Json::encode($this->getApiArray());
     }
 
