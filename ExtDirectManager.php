@@ -139,7 +139,7 @@ class ExtDirectManager extends Component
 
             if (!empty($annotation[0])) {
                 $annotatedActions[$this->getControllerName($className)][] = [
-                    'name' => strtolower($actionNameChunks[1]),
+                    'name' => lcfirst($actionNameChunks[1]),
                     'len' => $method->getNumberOfRequiredParameters()
                 ];
             }
@@ -156,7 +156,7 @@ class ExtDirectManager extends Component
     private function getDefaultActions($class)
     {
         $className = (new \ReflectionClass($class))->getShortName();
-        $actions = (new $class(strtolower($className), false))->actions();
+        $actions = (new $class(lcfirst($className), false))->actions();
 
         $actionsPrepared = [];
 
@@ -273,11 +273,11 @@ JAVASCRIPT;
 
         if (isset($requestBody[0]) && is_array($requestBody[0])) {
             foreach ($requestBody as $req) {
-                $route = strtolower($req['action'] . '/' . $req['method']);
+                $route = $req['action'] . '/' . $req['method'];
                 $response[] = $this->runAction($route, $req);
             }
         } else {
-            $response = $this->runAction(strtolower($requestBody['action'] . '/' . $requestBody['method']), $requestBody);
+            $response = $this->runAction($requestBody['action'] . '/' . $requestBody['method'], $requestBody);
         }
 
         return $response;
@@ -291,6 +291,8 @@ JAVASCRIPT;
      */
     private function runAction($route, $params)
     {
+        $route = substr(strtolower(preg_replace("/[A-Z]/", '-\\0', $route)), 1);
+
         $response = [
             'type'    => 'rpc',
             'tid'     => $params['tid'],
