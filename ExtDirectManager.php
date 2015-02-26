@@ -103,7 +103,7 @@ class ExtDirectManager extends Component
             $className = $reflection->getShortName();
             $actionsAnnotated = $this->getAnnotatedActions($className, $reflectionMethods);
             $actionsDefault = $this->getDefaultActions($class);
-            $actions = ArrayHelper::merge($actionsDefault, $actionsAnnotated);
+            $actions = array_merge($actions, ArrayHelper::merge($actionsDefault, $actionsAnnotated));
         }
 
         return $actions;
