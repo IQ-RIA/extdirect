@@ -302,6 +302,9 @@ JAVASCRIPT;
 
         try {
             $params = is_null($params['data']) ? [] : $params['data'][0];
+            if (isset($params[0]) && is_array($params[0]) && count($params) === 1) {
+                $params = $params[0];
+            }
             $routeInfo = Yii::$app->createController($route);
             $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params);
         } catch (\Exception $e) {
