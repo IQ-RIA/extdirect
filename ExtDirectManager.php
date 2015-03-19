@@ -140,7 +140,7 @@ class ExtDirectManager extends Component
             if (!empty($annotation[0])) {
                 $annotatedActions[$this->getControllerName($className)][] = [
                     'name' => lcfirst($actionNameChunks[1]),
-                    'len' => $method->getNumberOfRequiredParameters()
+                    'len' => $this->getParamsNumber($method)
                 ];
             }
         }
@@ -162,13 +162,26 @@ class ExtDirectManager extends Component
 
         foreach ($actions as $name => $action) {
             $reflection = new \ReflectionClass($action['class']);
+            $method = $reflection->getMethod('run');
             $actionsPrepared[$this->getControllerName($className)][] = [
                 'name' => $name,
-                'len' => $reflection->getMethod('run')->getNumberOfRequiredParameters()
+                'len' => $this->getParamsNumber($method)
             ];
         }
 
         return $actionsPrepared;
+    }
+    
+    /**
+     * Get number of parameters
+     * @param \ReflectionMethod $method
+     * @return int
+     */
+    private function getParamsNumber($method)
+    {
+        return $method->getNumberOfRequiredParameters() ?
+               $method->getNumberOfRequiredParameters() :
+               $method->getNumberOfParameters();
     }
 
     /**
