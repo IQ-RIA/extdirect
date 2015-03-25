@@ -301,6 +301,7 @@ JAVASCRIPT;
      * @param string $route
      * @param array $params
      * @return array
+     * @throws yii\web\UnauthorizedHttpException
      */
     private function runAction($route, $params)
     {
@@ -321,13 +322,17 @@ JAVASCRIPT;
             $routeInfo = Yii::$app->createController($route);
             $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params);
         } catch (\Exception $e) {
-            $response['result'] = 'exception';
-            if ($this->debug) {
-                $response['result'] = [
-                    'message' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine()
-                ];
+            if ($e instanceof yii\web\UnauthorizedHttpException) {
+                throw $e;
+            } else {
+                $response['result'] = 'exception';
+                if ($this->debug) {
+                    $response['result'] = [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine()
+                    ];
+                }
             }
         }
 
