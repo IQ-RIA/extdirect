@@ -322,17 +322,23 @@ JAVASCRIPT;
             $routeInfo = Yii::$app->createController($route);
             $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params);
         } catch (\Exception $e) {
-            if ($e instanceof yii\web\UnauthorizedHttpException) {
-                throw $e;
-            } else {
-                $response['result'] = 'exception';
-                if ($this->debug) {
-                    $response['result'] = [
-                        'message' => $e->getMessage(),
-                        'file' => $e->getFile(),
-                        'line' => $e->getLine()
-                    ];
-                }
+
+            $response['result'] = [
+                'success' => false,
+                'errors' => [
+                    'server error' => [
+                        'Internal server error.'
+                    ]
+                ],
+            ];
+
+            if ($this->debug) {
+                $response['result'] = array_merge($response['result'], [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'type' => get_class($e),
+                ]);
             }
         }
 
