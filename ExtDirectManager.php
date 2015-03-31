@@ -58,6 +58,12 @@ class ExtDirectManager extends Component
      * @var bool debug mode
      */
     public $debug = false;
+    
+    /**
+     * @var string special Exception that should be caught
+     */
+    public $exceptionClass = null;
+    
     /**
      * @inheritdoc
      */
@@ -322,15 +328,21 @@ JAVASCRIPT;
             $routeInfo = Yii::$app->createController($route);
             $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params);
         } catch (\Exception $e) {
-
-            $response['result'] = [
-                'success' => false,
-                'errors' => [
-                    'server error' => [
-                        'Internal server error.'
-                    ]
-                ],
-            ];
+            if ($this->exceptionClass && $e instanceof $this->exceptionClass) {
+                $response['result'] = [
+                    'success' => false,
+                    'errors' => json_decode($e->__toString())
+                ];
+            } else {
+                $response['result'] = [
+                    'success' => false,
+                    'errors' => [
+                        'server error' => [
+                            'Internal server error.'
+                        ]
+                    ],
+                ];
+            }
 
             if ($this->debug) {
                 $response['result'] = array_merge($response['result'], [
