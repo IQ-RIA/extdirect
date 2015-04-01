@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components\behaviors;
+namespace iqria\extdirect\behaviors;
 
 use yii\base\Behavior;
 use yii\validators\Validator;
@@ -9,16 +9,16 @@ use yii\helpers\Inflector;
 use iqria\extdirect\exceptions\ExtDirectValidationException;
 
 /**
- * Class ValidationBehavior represents basic input validation for all app's controllers
+ * Class InputValidationBehavior represents basic input validation for all app's controllers
  * @package app\components
  */
-class ValidationBehavior extends Behavior
+class InputValidationBehavior extends Behavior
 {
     /**
      * @param array $params the list of parameters (name => value) that should be validated
      * @param array $rules the list of validation rules for each of parameters keys
      * @return bool
-     * @throws iqria\extdirect\exceptions\ExtDirectValidationException
+     * @throws ExtDirectValidationException
      */
     public function validateInput($params, $rules)
     {
