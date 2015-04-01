@@ -28,6 +28,39 @@ class InputValidationBehavior extends Behavior
 
         $errors = [];
 
+        if (isset($params[0]) && is_array($params[0])) {
+            foreach ($params as $single) {
+                $errors[] = $this->validateSingleArray($single, $rules);
+            }
+        } else {
+            $errors = $this->validateSingleArray($params, $rules);
+        }
+
+        if (isset($errors[0]) && is_array($errors)) {
+            $errors = array_values(array_filter($errors, function($el) {
+                if ($el) {
+                    return $el;
+                }
+            }));
+        }
+
+        if (empty($errors)) {
+            return true;
+        }
+
+        throw new ExtDirectValidationException('Input validation errors.', 0, null, $errors);
+    }
+
+    /**
+     * Validates one level array
+     * @param array $params the list of parameters (name => value) that should be validated
+     * @param array $rules the list of validation rules for each of parameters keys
+     * @return array
+     */
+    private function validateSingleArray($params, $rules)
+    {
+        $errors = [];
+
         $requiredAttributes = $this->getRequiredAttributes($params, $rules);
 
         if ($requiredAttributes) {
@@ -44,18 +77,10 @@ class InputValidationBehavior extends Behavior
             }
 
             foreach ($rules[$attr] as $vName => $vAttrs) {
-                $isRequired = false;
-
                 if (is_array($vAttrs)) {
                     $validator = $this->createValidatorByName($vName, $vAttrs);
-                    if ($vName === 'required') {
-                        $isRequired = true;
-                    }
                 } else {
                     $validator = $this->createValidatorByName($vAttrs);
-                    if ($vName === 'required') {
-                        $isRequired = true;
-                    }
                 }
 
                 if (!$validator->validate($value)) {
@@ -64,11 +89,7 @@ class InputValidationBehavior extends Behavior
             }
         }
 
-        if (!$errors) {
-            return true;
-        }
-
-        throw new ExtDirectValidationException('Input validation errors.', 0, null, $errors);
+        return $errors;
     }
 
     /**
