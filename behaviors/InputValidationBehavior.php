@@ -28,7 +28,7 @@ class InputValidationBehavior extends Behavior
 
         $errors = [];
 
-        $requiredAttributes = $this->getRequiredAttributes($rules);
+        $requiredAttributes = $this->getRequiredAttributes($params, $rules);
 
         if ($requiredAttributes) {
             foreach ($requiredAttributes as $attr) {
@@ -44,14 +44,22 @@ class InputValidationBehavior extends Behavior
             }
 
             foreach ($rules[$attr] as $vName => $vAttrs) {
+                $isRequired = false;
+
                 if (is_array($vAttrs)) {
                     $validator = $this->createValidatorByName($vName, $vAttrs);
+                    if ($vName === 'required') {
+                        $isRequired = true;
+                    }
                 } else {
                     $validator = $this->createValidatorByName($vAttrs);
+                    if ($vName === 'required') {
+                        $isRequired = true;
+                    }
                 }
 
                 if (!$validator->validate($value)) {
-                   $errors[$attr][] = $this->getValidationError($attr, $validator);
+                    $errors[$attr][] = $this->getValidationError($attr, $validator);
                 }
             }
         }
@@ -115,23 +123,27 @@ class InputValidationBehavior extends Behavior
 
     /**
      * Get required attributes
+     * @param array $params
      * @param array $rules
      * @return array
      */
-    private function getRequiredAttributes($rules)
+    private function getRequiredAttributes($params, $rules)
     {
         $requiredAttributes = [];
+        $diff = array_diff(array_keys($rules), array_keys($params));
 
-        foreach ($rules as $k => $rule) {
-            if (!is_array($rule)) {
-                if ($rule === 'required') {
-                    $requiredAttributes[$k] = $rule;
+        foreach ($diff as $attribute) {
+            if (is_array($rules[$attribute])) {
+                if (array_key_exists('required', $rules[$attribute]) || in_array('required', $rules[$attribute])) {
+                    $requiredAttributes[] = $attribute;
                 }
             } else {
-                $requiredAttributes[$k] = $this->getRequiredAttributes($rule);
+                if ($rules[$attribute] === 'required') {
+                    $requiredAttributes[] = $attribute;
+                }
             }
         }
 
-        return array_keys($requiredAttributes);
+        return $requiredAttributes;
     }
 }
