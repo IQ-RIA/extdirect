@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components\exceptions;
+namespace iqria\extdirect\exceptions;
 
 /**
  * Class ExtDirectValidationException represents validation exception
