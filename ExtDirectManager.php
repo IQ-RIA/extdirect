@@ -7,6 +7,7 @@ use yii\base\Component;
 use yii\web\HttpException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
+use iqria\extdirect\exceptions\ExtDirectValidationException;
 
 /**
  * Class ExtDirectManager provides Yii2 implementation of Ext.Direct
@@ -58,11 +59,6 @@ class ExtDirectManager extends Component
      * @var bool debug mode
      */
     public $debug = false;
-    
-    /**
-     * @var string special Exception that should be caught
-     */
-    public $exceptionClass = null;
     
     /**
      * @inheritdoc
@@ -328,10 +324,10 @@ JAVASCRIPT;
             $routeInfo = Yii::$app->createController($route);
             $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params);
         } catch (\Exception $e) {
-            if ($this->exceptionClass && $e instanceof $this->exceptionClass) {
+            if ($e instanceof ExtDirectValidationException) {
                 $response['result'] = [
                     'success' => false,
-                    'errors' => json_decode($e->__toString())
+                    'errors' => $e->getErrors()
                 ];
             } else {
                 $response['result'] = [
