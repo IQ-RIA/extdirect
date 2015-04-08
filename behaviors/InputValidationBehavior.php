@@ -104,13 +104,7 @@ class InputValidationBehavior extends Behavior
             throw new InvalidParamException('Invalid validator name passed.');
         }
 
-        $validator = new Validator::$builtInValidators[$validatorName];
-
-        if ($config) {
-            foreach ($config as $name => $val) {
-                $validator->{$name} = $val;
-            }
-        }
+        $validator = new Validator::$builtInValidators[$validatorName]($config);
 
         return $validator;
     }
