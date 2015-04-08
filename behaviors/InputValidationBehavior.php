@@ -22,10 +22,6 @@ class InputValidationBehavior extends Behavior
      */
     public function validateInput($params, $rules)
     {
-        if (is_null($params) || !is_array($params) || empty($params) || empty($rules)) {
-            return;
-        }
-
         $errors = [];
 
         if (isset($params[0]) && is_array($params[0])) {
