@@ -12,7 +12,7 @@
             "role": "Creator"
         }
     ],
-    "minimum-stablity" : "dev",
+    "minimum-stability" : "dev",
     "require": {
         "yiisoft/yii2": "*"
     },
