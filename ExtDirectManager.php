@@ -324,6 +324,10 @@ JAVASCRIPT;
             $routeInfo = Yii::$app->createController($route);
             $response['result'] = $routeInfo[0]->runAction($routeInfo[1], $params);
         } catch (\Exception $e) {
+            if ($e instanceof HttpException) {
+                Yii::$app->response->setStatusCode($e->statusCode);
+            }
+            
             if ($e instanceof ExtDirectValidationException) {
                 $response['result'] = [
                     'success' => false,
