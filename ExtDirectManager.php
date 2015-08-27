@@ -8,6 +8,7 @@ use yii\web\HttpException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use iqria\extdirect\exceptions\ExtDirectValidationException;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * Class ExtDirectManager provides Yii2 implementation of Ext.Direct
@@ -332,6 +333,13 @@ JAVASCRIPT;
                 $response['result'] = [
                     'success' => false,
                     'errors' => $e->getErrors()
+                ];
+            } elseif ($e instanceof UnauthorizedHttpException) {
+                $response['result'] = [
+                    'success' => false,
+                    'errors' => [
+                        'Login Error' => $e->getMessage()
+                    ]
                 ];
             } else {
                 $response['result'] = [
