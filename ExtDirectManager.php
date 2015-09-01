@@ -329,36 +329,28 @@ JAVASCRIPT;
             if ($e instanceof HttpException) {
                 Yii::$app->response->setStatusCode($e->statusCode);
             }
-            
+
+            $header = 'Error';
+
             if ($e instanceof ExtDirectValidationException) {
-                $response['result'] = [
-                    'success' => false,
-                    'errors' => $e->getErrors()
-                ];
+                $errors = $e->getErrors();
             } elseif ($e instanceof UnauthorizedHttpException) {
-                $response['result'] = [
-                    'success' => false,
-                    'errors' => [
-                        'Login Error' => $e->getMessage()
-                    ]
-                ];
+                $errors = $e->getMessage();
+                $header = 'Login Error';
             } elseif ($e instanceof ResourceConnectionException) {
-                $response['result'] = [
-                    'success' => false,
-                    'errors' => [
-                        'Error' => $e->getMessage()
-                    ]
-                ];
+                $errors = $e->getMessage();
+                $header = 'Connection Error';
             } else {
-                $response['result'] = [
-                    'success' => false,
-                    'errors' => [
-                        'server error' => [
-                            'Internal server error.'
-                        ]
-                    ],
-                ];
+                $errors = $e->getMessage();
+                $header = 'Server Error';
             }
+
+            $response['result'] = [
+                'success' => false,
+                'errors' => [
+                    $header => $errors
+                ]
+            ];
 
             if ($this->debug) {
                 $response['result'] = array_merge($response['result'], [
