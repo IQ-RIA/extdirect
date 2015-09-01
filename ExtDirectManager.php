@@ -8,6 +8,7 @@ use yii\web\HttpException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use iqria\extdirect\exceptions\ExtDirectValidationException;
+use iqria\extdirect\exceptions\ResourceConnectionException;
 use yii\web\UnauthorizedHttpException;
 
 /**
@@ -339,6 +340,13 @@ JAVASCRIPT;
                     'success' => false,
                     'errors' => [
                         'Login Error' => $e->getMessage()
+                    ]
+                ];
+            } elseif ($e instanceof ResourceConnectionException) {
+                $response['result'] = [
+                    'success' => false,
+                    'errors' => [
+                        'Error' => $e->getMessage()
                     ]
                 ];
             } else {
