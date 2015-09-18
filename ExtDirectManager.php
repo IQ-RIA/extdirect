@@ -330,9 +330,8 @@ JAVASCRIPT;
                 Yii::$app->response->setStatusCode($e->statusCode);
             }
 
-            $header = 'Error';
-
             if ($e instanceof ExtDirectValidationException) {
+                $header = false;
                 $errors = $e->getErrors();
             } elseif ($e instanceof UnauthorizedHttpException) {
                 $errors = $e->getMessage();
@@ -347,9 +346,7 @@ JAVASCRIPT;
 
             $response['result'] = [
                 'success' => false,
-                'errors' => [
-                    $header => $errors
-                ]
+                'errors' => $header ? [$header => $errors] : $errors
             ];
 
             if ($this->debug) {
